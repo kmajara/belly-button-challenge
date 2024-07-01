@@ -15,7 +15,6 @@ function buildMetadata(sample) {
     metadataPanel.html(""); 
 
     // Inside a loop use d3 to append new tags for each key-value in the filtered metadata.
-
     Object.entries(result).forEach(([key, value]) => {
         metadataPanel.append("h6").text(`${key.toUpperCase()}: ${value}`)
     });
@@ -40,7 +39,7 @@ function buildCharts(sample) {
     
 
     // Build a Bubble Chart
-    //Createa layout for the BubbleChart
+    // First, create a layout for the BubbleChart
     var bubbleLayout = {
         title: "Bacteria Cultures Per Sample",
         margin: {t:0}, 
@@ -48,10 +47,10 @@ function buildCharts(sample) {
         xaxis: {title: "OTU ID"},
         yaxis: {title: "Number of Bacteria"},
         hovermode: "closest",
-        //margin: {t:30}
+        margin: {t:50}
       };
 
-    //Create the trace for the bubble Chart
+    // Then, create the trace for the bubble Chart
     var bubbleMetrics = [{
         x: otuIds,
         y: sampleValues,
@@ -64,13 +63,13 @@ function buildCharts(sample) {
         }
     }]; 
 
-    // Render the Bubble Chart using Plotly
+    // Finally, render the Bubble Chart using Plotly
     Plotly.newPlot("bubble", bubbleMetrics, bubbleLayout, {responsive: true});  
 
 
     // For the Bar Chart, mapping the otu_ids to a list of strings for the yticks
     //use top-10 values for y values in descending order
-    var yticks = otuIds.slice(0,10).map(otuId => "OTU " + id).reverse(); 
+    var yticks = otuIds.slice(0,10).map(id => "OTU " + id).reverse(); 
 
     // Build a Bar Chart
     var barMetrics = [{
@@ -104,29 +103,35 @@ function init() {
   d3.json("https://static.bc-edx.com/data/dl-1-2/m14/lms/starter/samples.json").then((data) => {
 
     // Get the names field
-
+    var names = data.names; 
 
     // Use d3 to select the dropdown with id of `#selDataset`
-
+    var dropSelector = d3.select("#selDataset");
 
     // Use the list of sample names to populate the select options
     // Hint: Inside a loop, you will need to use d3 to append a new
     // option for each sample name.
+    names.forEach((name) => {
+      dropSelector.append("option").text(name).property("value", name);
+    
+    });
 
 
     // Get the first sample from the list
-
+    var sampleOne = names[0];
 
     // Build charts and metadata panel with the first sample
-
+    buildCharts(sampleOne); 
+    buildMetadata(sampleOne);
   });
 }
+// Initialize the dashboard
+init();
 
 // Function for event listener
 function optionChanged(newSample) {
   // Build charts and metadata panel each time a new sample is selected
+  buildCharts(newSample); 
+  buildMetadata(newSample);
 
 }
-
-// Initialize the dashboard
-init();
