@@ -81,16 +81,20 @@ function buildCharts(sample) {
     }];
 
     //Create the layout for the bar
-    var barLayout = [{
+    var barLayout = {
       title: "Top 10 Bacteria Cultures Found",
       margin: {t: 30, l: 150},
+      xaxis: {
+        tickmode: "linear",
+        dtick: 20,
+        title: "Number of Bacteria"
+      },
       yaxis: {
         tickmode: "array",
-        tickvals: [0,1,2,3,4,5,6,7,8,9],
+        tickvals: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         ticktext: yticks
-      },
-
-    }];
+      }
+    };
 
     // Render the Bar Chart
     Plotly.newPlot("bar", barMetrics, barLayout); 
